@@ -239,19 +239,19 @@
   </ul>
 
   <div class="tab-content border-0">
-    <div class="tab-pane fade show active" id="auth-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://jgypz1bf15gb8c.proxy.runpod.net/generate_api_key \
+    <div class="tab-pane fade show active" id="auth-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://jgypz1bf15gb8c-8000.proxy.runpod.net/generate_api_key \
   -H "Content-Type: application/json" \
   -d '{"username": "acme-inc"}'</code></pre></div>
 
     <div class="tab-pane fade" id="auth-python" role="tabpanel"><pre><code class="language-python">import requests, json
 
 resp = requests.post(
-    "https://jgypz1bf15gb8c.proxy.runpod.net/generate_api_key",
+    "https://jgypz1bf15gb8c-8000.proxy.runpod.net/generate_api_key",
     json={"username": "acme-inc"},
 )
 print(resp.json())</code></pre></div>
 
-    <div class="tab-pane fade" id="auth-js" role="tabpanel"><pre><code class="language-javascript">const res = await fetch("https://jgypz1bf15gb8c.proxy.runpod.net/generate_api_key", {
+    <div class="tab-pane fade" id="auth-js" role="tabpanel"><pre><code class="language-javascript">const res = await fetch("https://jgypz1bf15gb8c-8000.proxy.runpod.net/generate_api_key", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ username: "acme-inc" })
@@ -296,21 +296,21 @@ console.log(await res.json());</code></pre></div>
   </ul>
 
   <div class="tab-content border-0">
-    <div class="tab-pane fade show active" id="query-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://jgypz1bf15gb8c.proxy.runpod.net/query \
+    <div class="tab-pane fade show active" id="query-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://jgypz1bf15gb8c-8000.proxy.runpod.net/query \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $API_KEY" \
   -d '{"basket_query":"blue trucker hat\nblack snapback\nsummer sale"}'</code></pre></div>
 
     <div class="tab-pane fade" id="query-python" role="tabpanel"><pre><code class="language-python">payload = { "basket_query": "blue trucker hat\\nblack snapback\\nsummer sale" }
 resp = requests.post(
-    "https://jgypz1bf15gb8c.proxy.runpod.net/query",
+    "https://jgypz1bf15gb8c-8000.proxy.runpod.net/query",
     headers={"X-API-Key": api_key},
     json=payload
 )
 print(resp.json()["ids"])</code></pre></div>
 
     <div class="tab-pane fade" id="query-js" role="tabpanel"><pre><code class="language-javascript">const payload = { basket_query: "blue trucker hat\\nblack snapback\\nsummer sale" };
-const res = await fetch("https://jgypz1bf15gb8c.proxy.runpod.net/query", {
+const res = await fetch("https://jgypz1bf15gb8c-8000.proxy.runpod.net/query", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -363,19 +363,19 @@ console.log(data.ids);</code></pre></div>
   </ul>
 
   <div class="tab-content border-0">
-    <div class="tab-pane fade show active" id="send-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://jgypz1bf15gb8c.proxy.runpod.net/send \
+    <div class="tab-pane fade show active" id="send-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://jgypz1bf15gb8c-8000.proxy.runpod.net/send \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $API_KEY" \
   -d @feedback.json</code></pre></div>
 
     <div class="tab-pane fade" id="send-python" role="tabpanel"><pre><code class="language-python">resp = requests.post(
-    "https://jgypz1bf15gb8c.proxy.runpod.net/send",
+    "https://jgypz1bf15gb8c-8000.proxy.runpod.net/send",
     headers={"X-API-Key": api_key},
     json={"event": "customer_feedback", "rating": 4}
 )
 print(resp.json())</code></pre></div>
 
-    <div class="tab-pane fade" id="send-js" role="tabpanel"><pre><code class="language-javascript">await fetch("https://jgypz1bf15gb8c.proxy.runpod.net/send", {
+    <div class="tab-pane fade" id="send-js" role="tabpanel"><pre><code class="language-javascript">await fetch("https://jgypz1bf15gb8c-8000.proxy.runpod.net/send", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
