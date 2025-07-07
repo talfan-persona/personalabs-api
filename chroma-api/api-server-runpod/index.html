@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PersonaLabs API - Documentation & Testing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 2rem;
+        }
+        
+        .api-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .endpoint {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .endpoint h3 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .endpoint .method {
+            background: #667eea;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .download-section {
+            text-align: center;
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+        
+        .download-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .code-preview {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        .usage-instructions {
+            background: #e6f3ff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 PersonaLabs API</h1>
+            <p>Product Recommendation API - Documentation & Testing Tools</p>
+        </div>
+        
+        <div class="content">
+            <h2>📋 API Overview</h2>
+            <p>This API provides product recommendation services with three main endpoints for authentication, querying, and data submission.</p>
+            
+            <div class="api-info">
+                <div class="endpoint">
+                    <div class="method">POST</div>
+                    <h3>/generate_api_key</h3>
+                    <p>Generate an authentication key for API access. Requires a username in the request body.</p>
+                </div>
+                
+                <div class="endpoint">
+                    <div class="method">POST</div>
+                    <h3>/query</h3>
+                    <p>Get product recommendations based on basket queries. Requires API key authentication.</p>
+                </div>
+                
+                <div class="endpoint">
+                    <div class="method">POST</div>
+                    <h3>/send</h3>
+                    <p>Store arbitrary JSON data. Useful for logging events and feedback. Requires API key authentication.</p>
+                </div>
+            </div>
+            
+            <div class="download-section">
+                <h2>🔧 API Testing Script</h2>
+                <p>Download our comprehensive Python script to test all API endpoints automatically.</p>
+                <br>
+                <a href="test_api_docs.py" class="download-btn" download>📥 Download test_api_docs.py</a>
+            </div>
+            
+            <div class="usage-instructions">
+                <h3>📚 How to Use the Test Script</h3>
+                <ol>
+                    <li>Download the <code>test_api_docs.py</code> script</li>
+                    <li>Update the <code>BASE_URL</code> variable with your API endpoint</li>
+                    <li>Run the script: <code>python3 test_api_docs.py</code></li>
+                    <li>The script will test all three endpoints and provide detailed results</li>
+                </ol>
+            </div>
+            
+            <h3>💻 Quick Preview</h3>
+            <div class="code-preview">
+# Example usage
+python3 test_api_docs.py
+
+🚀 Starting API Documentation Tests
+📍 Base URL: https://your-api-endpoint.com
+⏰ Test started at: 2025-01-27 10:30:00
+
+============================================================
+ Testing POST /generate_api_key
+============================================================
+✅ /generate_api_key: SUCCESS
+   Response: {
+     "api_key": "your-generated-key-here",
+     "username": "test-user"
+   }
+            </div>
+            
+            <h3>🌟 Features</h3>
+            <ul>
+                <li>✅ Tests all three API endpoints automatically</li>
+                <li>🔐 Handles API key generation and authentication</li>
+                <li>📊 Provides detailed success/failure reporting</li>
+                <li>⚡ Fast and reliable testing with proper error handling</li>
+                <li>🎯 Easy to customize for different environments</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 PersonaLabs API - Built for developers, by developers</p>
+        </div>
+    </div>
+</body>
+</html> 
