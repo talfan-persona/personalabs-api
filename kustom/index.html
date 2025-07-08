@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Toy Product Recommendation API – Developer Guide</title>
+
+  <!--  Bootstrap   – adds the tab navigation  -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <!--  Highlight.js + copy button  -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/default.min.css"
+  />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/highlightjs-copy/dist/highlightjs-copy.min.css"
+  />
+
+  <!-- OpenAI Sans font (same as their platform) -->
+  <link
+    rel="preload"
+    href="https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-Regular.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin="anonymous"
+  />
+  <link
+    rel="preload"
+    href="https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-Semibold.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin="anonymous"
+  />
+
+  <style>
+    /* ----------  Design tokens ----------- */
+    :root {
+      --text-primary: #374151;
+      --text-heading: #111827;
+      --brand-blue: #10b981;
+      --code-bg: #f9fafb;
+      --code-border: #e5e7eb;
+      --container-w: 900px;
+    }
+
+    /* OpenAI Sans font faces */
+    @font-face {
+      font-family: 'OpenAI Sans';
+      src: url('https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'OpenAI Sans';
+      src: url('https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-Semibold.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* ----------  Base typography & layout ----------- */
+    body {
+      font-family: 'OpenAI Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text-primary);
+      line-height: 1.6;
+      background: #fff;
+      padding: 2rem 1rem 4rem;
+      margin: 0;
+    }
+
+    main {
+      max-width: var(--container-w);
+      margin: 0 auto;
+    }
+
+    h1, h2, h3 {
+      font-weight: 600;
+      color: var(--text-heading);
+      scroll-margin-top: 4rem;
+    }
+
+    h1 { font-size: 2.25rem; margin-bottom: 1.5rem; }
+    h2 { font-size: 1.75rem; margin-top: 3rem; margin-bottom: 1.5rem; }
+    h3 { font-size: 1.375rem; margin-top: 2rem; margin-bottom: 1rem; }
+
+    a { color: var(--brand-blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ----------  Code blocks ----------- */
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: 6px;
+      padding: 1rem;
+      overflow-x: auto;
+      position: relative;
+      font-size: 0.875rem;
+      line-height: 1.1;
+      margin: 1.5rem 0;
+      counter-reset: line-numbering;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    }
+
+    /* Line numbers using CSS counters */
+    pre .line {
+      counter-increment: line-numbering;
+      display: block;
+      padding-left: 3.5rem;
+      position: relative;
+      line-height: 1.1;
+      margin: 0;
+    }
+
+    pre .line::before {
+      content: counter(line-numbering);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3rem;
+      padding-right: 1rem;
+      text-align: right;
+      color: #9ca3af;
+      border-right: 1px solid var(--code-border);
+      background: #f3f4f6;
+      user-select: none;
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+      line-height: 1.1;
+    }
+
+    /* ----------  Copy button styling ----------- */
+    .hljs-copy-button {
+      position: absolute !important;
+      top: 0.75rem;
+      right: 0.75rem;
+      width: 20px;
+      height: 20px;
+      padding: 2px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      opacity: 0.6;
+      border-radius: 4px;
+      transition: none; /* Remove any hover animations */
+    }
+
+    .hljs-copy-button:hover,
+    .hljs-copy-button:focus,
+    .hljs-copy-button[data-copied="true"] {
+      opacity: 1;
+      transform: none; /* Remove any hover transform animations */
+    }
+
+    /* Using the new copy-square SVG */
+    .hljs-copy-button svg { 
+      display: none; 
+    }
+    .hljs-copy-button::before {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 100%;
+      background-size: 16px 16px;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPgo8c3ZnIHdpZHRoPSI4MDBweCIgaGVpZ2h0PSI4MDBweCIgdmlld0JveD0iMCAtMiAzNiAzNiIgaWQ9IkxhZ2VyXzExMiIgZGF0YS1uYW1lPSJMYWdlciAxMTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+DQogIDxwYXRoIGlkPSJQYXRoXzExMyIgZGF0YS1uYW1lPSJQYXRoIDExMyIgZD0iTTM0LDBIMTRhMiwyLDAsMCwwLTIsMlY4SDJhMiwyLDAsMCwwLTIsMlYzMGEyLDIsMCwwLDAsMiwySDIyYTIsMiwwLDAsMCwyLTJWMjRIMzRhMiwyLDAsMCwwLDItMlYyQTIsMiwwLDAsMCwzNCwwWk0yMCwxNFYyN2ExLDEsMCwwLDEtMSwxSDVhMSwxLDAsMCwxLTEtMVYxM2ExLDEsMCwwLDEsMS0xSDE5YTEsMSwwLDAsMSwxLDFaTTMyLDZWMTlhMSwxLDAsMCwxLTEsMUgyNFYxMGEyLDIsMCwwLDAtMi0ySDE2VjVhMSwxLDAsMCwxLDEtMUgzMWExLDEsMCwwLDEsMSwxWiIgZmlsbD0iIzE2MTYxNSIvPg0KPC9zdmc+");
+    }
+
+    .hljs-copy-button[data-copied="true"]::before {
+      background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwIDZMOSAxN0w0IDEyIiBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=");
+    }
+
+    /* Override highlight.js styles for better OpenAI-like appearance */
+    .hljs {
+      background: var(--code-bg) !important;
+      color: #374151 !important;
+    }
+    
+    .hljs-string { color: #059669 !important; }
+    .hljs-number { color: #dc2626 !important; }
+    .hljs-literal { color: #7c3aed !important; }
+    .hljs-keyword { color: #1d4ed8 !important; }
+    .hljs-built_in { color: #0891b2 !important; }
+    .hljs-variable { color: #be185d !important; }
+    .hljs-comment { color: #6b7280 !important; }
+  </style>
+</head>
+<body>
+  <main>
+  <h1>Toy Product Recommendation API</h1>
+  <p>
+    Welcome to the Toy Mode API! This guide shows how to:
+    <ol>
+      <li>Generate an API key</li>
+      <li>Make basket-based queries (<code>POST /query</code>)</li>
+      <li>Send arbitrary payloads (<code>POST /send</code>)</li>
+    </ol>
+    This is a demonstration API that returns random recommendations from a toy catalogue. Requests must be authenticated with <code>X-API-Key</code>—so step&nbsp;1 first.
+  </p>
+
+  <hr/>
+
+  <!-- ========================================================== -->
+  <h2 id="auth">1 · Generate an API key (<code>POST /generate_api_key</code>)</h2>
+
+  <p><strong>Request body</strong></p>
+  <pre><code class="language-json">{
+  "username": "test-user"
+}</code></pre>
+
+  <p><strong>Response</strong></p>
+  <pre><code class="language-json">{
+  "username": "test-user",
+  "api_key": "S2evAhxSlfq4P0xegU8VKL9X-fZ5AgK8rfK2mPAD"
+}</code></pre>
+
+  <!-- --------- TAB NAV ---------- -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#auth-curl" role="tab">cURL</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#auth-python" role="tab">Python</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#auth-js" role="tab">JavaScript</button>
+    </li>
+  </ul>
+
+  <div class="tab-content border-0">
+    <div class="tab-pane fade show active" id="auth-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://ziik7963frhink-8001.proxy.runpod.net/generate_api_key \
+  -H "Content-Type: application/json" \
+  -d '{"username": "test-user"}'</code></pre></div>
+
+    <div class="tab-pane fade" id="auth-python" role="tabpanel"><pre><code class="language-python">import requests, json
+
+resp = requests.post(
+    "https://ziik7963frhink-8001.proxy.runpod.net/generate_api_key",
+    json={"username": "test-user"},
+)
+print(resp.json())</code></pre></div>
+
+    <div class="tab-pane fade" id="auth-js" role="tabpanel"><pre><code class="language-javascript">const res = await fetch("https://ziik7963frhink-8001.proxy.runpod.net/generate_api_key", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ username: "test-user" })
+});
+console.log(await res.json());</code></pre></div>
+  </div>
+
+  <hr/>
+
+  <!-- ========================================================== -->
+  <h2 id="query">2 · Retrieve recommendations (<code>POST /query</code>)</h2>
+
+  <p><strong>Headers</strong></p>
+  <ul>
+    <li><code>Content-Type: application/json</code></li>
+    <li><code>X-API-Key: &lt;your-key&gt;</code></li>
+  </ul>
+
+  <p><strong>Request body</strong></p>
+  <pre><code class="language-json">{
+  "basket_ids": ["SP0001", "LP0201", "HP0401"],
+  "n_results": 5,
+  "request_type": "basket-search",
+  "generative_captions": false,
+  "max_tokens": 40,
+  "use_reranking": true
+}</code></pre>
+
+  <p><strong>Response</strong></p>
+  <pre><code class="language-json">{
+  "ids": [["SP0023", "LP0205", "HP0407", "SP0089", "LP0245"]]
+}</code></pre>
+
+  <!-- --------- TAB NAV ---------- -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#query-curl" role="tab">cURL</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#query-python" role="tab">Python</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#query-js" role="tab">JavaScript</button>
+    </li>
+  </ul>
+
+  <div class="tab-content border-0">
+    <div class="tab-pane fade show active" id="query-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://ziik7963frhink-8001.proxy.runpod.net/query \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $API_KEY" \
+  -d '{
+    "basket_ids": ["SP0001", "LP0201", "HP0401"],
+    "n_results": 5
+  }'</code></pre></div>
+
+    <div class="tab-pane fade" id="query-python" role="tabpanel"><pre><code class="language-python">payload = {
+    "basket_ids": ["SP0001", "LP0201", "HP0401"],
+    "n_results": 5
+}
+resp = requests.post(
+    "https://ziik7963frhink-8001.proxy.runpod.net/query",
+    headers={"X-API-Key": api_key},
+    json=payload
+)
+print(resp.json()["ids"])</code></pre></div>
+
+    <div class="tab-pane fade" id="query-js" role="tabpanel"><pre><code class="language-javascript">const payload = {
+  basket_ids: ["SP0001", "LP0201", "HP0401"],
+  n_results: 5
+};
+const res = await fetch("https://ziik7963frhink-8001.proxy.runpod.net/query", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-API-Key": apiKey
+  },
+  body: JSON.stringify(payload)
+});
+const data = await res.json();
+console.log(data.ids);</code></pre></div>
+  </div>
+
+  <h3>Product ID Formats</h3>
+  <p>The toy catalogue contains three types of products with these ID formats:</p>
+  <ul>
+    <li><strong>SP####</strong> - Smartphones (e.g., SP0001, SP0002, SP0003)</li>
+    <li><strong>LP####</strong> - Laptops (e.g., LP0201, LP0202, LP0203)</li>
+    <li><strong>HP####</strong> - Headphones (e.g., HP0401, HP0402, HP0403)</li>
+  </ul>
+
+  <hr/>
+
+  <!-- ========================================================== -->
+  <h2 id="send">3 · Send arbitrary JSON (<code>POST /send</code>)</h2>
+
+  <p>
+    Use <code>/send</code> to store any debugging or feedback payload you like; the
+    server writes it to persistent storage.  
+    <em>Important:</em> the body is passed through verbatim, so structure it exactly as you want it
+    recorded.
+  </p>
+
+  <p><strong>Headers</strong>: same as <code>/query</code> (plus JSON content-type).</p>
+
+  <p><strong>Example body</strong></p>
+  <pre><code class="language-json">{
+  "event": "customer_feedback",
+  "product_id": "SP0001",
+  "rating": 4,
+  "comment": "Great smartphone, but battery could be better."
+}</code></pre>
+
+  <p><strong>Response</strong></p>
+  <pre><code class="language-json">{
+  "status": "stored"
+}</code></pre>
+
+  <!-- --------- TAB NAV ---------- -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#send-curl" role="tab">cURL</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#send-python" role="tab">Python</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#send-js" role="tab">JavaScript</button>
+    </li>
+  </ul>
+
+  <div class="tab-content border-0">
+    <div class="tab-pane fade show active" id="send-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://ziik7963frhink-8001.proxy.runpod.net/send \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $API_KEY" \
+  -d @feedback.json</code></pre></div>
+
+    <div class="tab-pane fade" id="send-python" role="tabpanel"><pre><code class="language-python">resp = requests.post(
+    "https://ziik7963frhink-8001.proxy.runpod.net/send",
+    headers={"X-API-Key": api_key},
+    json={"event": "customer_feedback", "rating": 4}
+)
+print(resp.json())</code></pre></div>
+
+    <div class="tab-pane fade" id="send-js" role="tabpanel"><pre><code class="language-javascript">await fetch("https://ziik7963frhink-8001.proxy.runpod.net/send", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-API-Key": apiKey
+  },
+  body: JSON.stringify({ event: "customer_feedback", rating: 4 })
+});</code></pre></div>
+  </div>
+
+  <hr/>
+
+  <!-- ========================================================== -->
+  <h2 id="other">Additional Endpoints</h2>
+
+  <h3><code>GET /health</code></h3>
+  <p>Check the API health status and catalogue loading status.</p>
+  <pre><code class="language-bash">curl https://ziik7963frhink-8001.proxy.runpod.net/health</code></pre>
+
+  <h3><code>GET /catalogue</code></h3>
+  <p>Retrieve the full product catalogue (requires API key).</p>
+  <pre><code class="language-bash">curl -H "X-API-Key: $API_KEY" https://ziik7963frhink-8001.proxy.runpod.net/catalogue</code></pre>
+
+  <h3><code>GET /catalogue/{product_id}</code></h3>
+  <p>Get details for a specific product (requires API key).</p>
+  <pre><code class="language-bash">curl -H "X-API-Key: $API_KEY" https://ziik7963frhink-8001.proxy.runpod.net/catalogue/SP0001</code></pre>
+
+  <hr/>
+
+  <!--  ----------- Libraries ---------- -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Highlight.js for syntax highlighting -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <!-- Highlight.js Copy Button plugin -->
+  <script src="https://cdn.jsdelivr.net/npm/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize Highlight.js with copy plugin
+      hljs.addPlugin(new CopyButtonPlugin());
+      hljs.highlightAll();
+     
+      // Add line numbers to all code blocks
+      document.querySelectorAll('pre code').forEach(function(codeBlock) {
+        const lines = codeBlock.innerHTML.split('\n');
+        const numberedLines = lines.map(function(line) {
+          return '<span class="line">' + line + '</span>';
+        });
+        codeBlock.innerHTML = numberedLines.join('\n');
+      });
+      
+      // Initialize Bootstrap tabs
+      var triggerTabList = [].slice.call(document.querySelectorAll('#requestTabs button'));
+      triggerTabList.forEach(function (triggerEl) {
+        var tabTrigger = new bootstrap.Tab(triggerEl);
+      });
+    });
+  </script>
+  </main>
+</body>
+</html> 
