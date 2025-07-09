@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Product Recommendation API – Developer Guide</title>
+  <title>Toy Product Recommendation API – Developer Guide</title>
 
   <!--  Bootstrap   – adds the tab navigation  -->
   <link
@@ -198,15 +198,15 @@
 </head>
 <body>
   <main>
-  <h1>Persona Labs: Product Recommendation API</h1>
+  <h1>Toy Product Recommendation API</h1>
   <p>
-    Welcome! This guide shows how to:
+    Welcome to the Toy Mode API! This guide shows how to:
     <ol>
       <li>Generate an API key</li>
-      <li>Make queries (<code>POST /query</code>)</li>
+      <li>Make basket-based queries (<code>POST /query</code>)</li>
       <li>Send arbitrary payloads (<code>POST /send</code>)</li>
     </ol>
-    Requests must be authenticated with <code>X-API-Key</code>—so step&nbsp;1 first.
+    This is a demonstration API that returns random recommendations from a toy catalogue. Requests must be authenticated with <code>X-API-Key</code>—so step&nbsp;1 first.
   </p>
 
   <hr/>
@@ -216,12 +216,12 @@
 
   <p><strong>Request body</strong></p>
   <pre><code class="language-json">{
-  "username": "acme-inc"
+  "username": "test-user"
 }</code></pre>
 
   <p><strong>Response</strong></p>
   <pre><code class="language-json">{
-  "username": "acme-inc",
+  "username": "test-user",
   "api_key": "S2evAhxSlfq4P0xegU8VKL9X-fZ5AgK8rfK2mPAD"
 }</code></pre>
 
@@ -239,22 +239,22 @@
   </ul>
 
   <div class="tab-content border-0">
-    <div class="tab-pane fade show active" id="auth-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://jgypz1bf15gb8c-8000.proxy.runpod.net/generate_api_key \
+    <div class="tab-pane fade show active" id="auth-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://ziik7963frhink-8001.proxy.runpod.net/generate_api_key \
   -H "Content-Type: application/json" \
-  -d '{"username": "acme-inc"}'</code></pre></div>
+  -d '{"username": "test-user"}'</code></pre></div>
 
     <div class="tab-pane fade" id="auth-python" role="tabpanel"><pre><code class="language-python">import requests, json
 
 resp = requests.post(
-    "https://jgypz1bf15gb8c-8000.proxy.runpod.net/generate_api_key",
-    json={"username": "acme-inc"},
+    "https://ziik7963frhink-8001.proxy.runpod.net/generate_api_key",
+    json={"username": "test-user"},
 )
 print(resp.json())</code></pre></div>
 
-    <div class="tab-pane fade" id="auth-js" role="tabpanel"><pre><code class="language-javascript">const res = await fetch("https://jgypz1bf15gb8c-8000.proxy.runpod.net/generate_api_key", {
+    <div class="tab-pane fade" id="auth-js" role="tabpanel"><pre><code class="language-javascript">const res = await fetch("https://ziik7963frhink-8001.proxy.runpod.net/generate_api_key", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ username: "acme-inc" })
+  body: JSON.stringify({ username: "test-user" })
 });
 console.log(await res.json());</code></pre></div>
   </div>
@@ -272,14 +272,17 @@ console.log(await res.json());</code></pre></div>
 
   <p><strong>Request body</strong></p>
   <pre><code class="language-json">{
-  "basket_query": "blue trucker hat\nblack snapback\nsummer sale"
+  "basket_ids": ["SP0001", "LP0201", "HP0401"],
+  "n_results": 5,
+  "request_type": "basket-search",
+  "generative_captions": false,
+  "max_tokens": 40,
 }</code></pre>
 
   <p><strong>Response</strong></p>
   <pre><code class="language-json">{
-  "ids": ["P-20034", "P-15502", "P-00912", "..."],
-  "basket_query": "blue trucker hat\nblack snapback\nsummer sale",
-  "gpu_used": true
+  "ids": ["SP0023", "LP0205", "HP0407", "SP0089", "LP0245"],
+  "basket_query": "Time: Monday, January 01, 2024 at 12:00:00 PM UTC\nTimeSync Smartwatch - Black Sport Band\nLaptopTech Pro 15 - Silver\nSoundMax Wireless - Blue",
 }</code></pre>
 
   <!-- --------- TAB NAV ---------- -->
@@ -296,21 +299,32 @@ console.log(await res.json());</code></pre></div>
   </ul>
 
   <div class="tab-content border-0">
-    <div class="tab-pane fade show active" id="query-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://jgypz1bf15gb8c-8000.proxy.runpod.net/query \
+    <div class="tab-pane fade show active" id="query-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://ziik7963frhink-8001.proxy.runpod.net/query \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $API_KEY" \
-  -d '{"basket_query":"blue trucker hat\nblack snapback\nsummer sale"}'</code></pre></div>
+  -d '{
+    "basket_ids": ["SP0001", "LP0201", "HP0401"],
+    "n_results": 5
+  }'</code></pre></div>
 
-    <div class="tab-pane fade" id="query-python" role="tabpanel"><pre><code class="language-python">payload = { "basket_query": "blue trucker hat\\nblack snapback\\nsummer sale" }
+    <div class="tab-pane fade" id="query-python" role="tabpanel"><pre><code class="language-python">payload = {
+    "basket_ids": ["SP0001", "LP0201", "HP0401"],
+    "n_results": 5
+}
 resp = requests.post(
-    "https://jgypz1bf15gb8c-8000.proxy.runpod.net/query",
+    "https://ziik7963frhink-8001.proxy.runpod.net/query",
     headers={"X-API-Key": api_key},
     json=payload
 )
-print(resp.json()["ids"])</code></pre></div>
+result = resp.json()
+print(result["ids"])
+print(f"GPU used: {result['gpu_used']}")</code></pre></div>
 
-    <div class="tab-pane fade" id="query-js" role="tabpanel"><pre><code class="language-javascript">const payload = { basket_query: "blue trucker hat\\nblack snapback\\nsummer sale" };
-const res = await fetch("https://jgypz1bf15gb8c-8000.proxy.runpod.net/query", {
+    <div class="tab-pane fade" id="query-js" role="tabpanel"><pre><code class="language-javascript">const payload = {
+  basket_ids: ["SP0001", "LP0201", "HP0401"],
+  n_results: 5
+};
+const res = await fetch("https://ziik7963frhink-8001.proxy.runpod.net/query", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -319,8 +333,16 @@ const res = await fetch("https://jgypz1bf15gb8c-8000.proxy.runpod.net/query", {
   body: JSON.stringify(payload)
 });
 const data = await res.json();
-console.log(data.ids);</code></pre></div>
+console.log(data.ids);
+console.log(`GPU used: ${data.gpu_used}`);</code></pre></div>
   </div>
+
+  <h3>Product ID Requirements</h3>
+  <p>The <code>basket_ids</code> parameter expects an array of valid product IDs from the loaded dataset. If you provide invalid IDs, the API will return a helpful error message showing available product IDs you can use.</p>
+  <p><strong>Example error response for invalid IDs:</strong></p>
+  <pre><code class="language-json">{
+  "detail": "Query processing failed: Item 'invalid_id' not found in dataset. Available items include: ['b000056he6', 'b000058a2y', 'b00005jn1w', ...] (Total: 12450 items available)"
+}</code></pre>
 
   <hr/>
 
@@ -339,9 +361,9 @@ console.log(data.ids);</code></pre></div>
   <p><strong>Example body</strong></p>
   <pre><code class="language-json">{
   "event": "customer_feedback",
-  "id": "P-20034",
+  "product_id": "SP0001",
   "rating": 4,
-  "comment": "Pretty good, but would like more colours."
+  "comment": "Great smartphone, but battery could be better."
 }</code></pre>
 
   <p><strong>Response</strong></p>
@@ -363,19 +385,19 @@ console.log(data.ids);</code></pre></div>
   </ul>
 
   <div class="tab-content border-0">
-    <div class="tab-pane fade show active" id="send-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://jgypz1bf15gb8c-8000.proxy.runpod.net/send \
+    <div class="tab-pane fade show active" id="send-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://ziik7963frhink-8001.proxy.runpod.net/send \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $API_KEY" \
   -d @feedback.json</code></pre></div>
 
     <div class="tab-pane fade" id="send-python" role="tabpanel"><pre><code class="language-python">resp = requests.post(
-    "https://jgypz1bf15gb8c-8000.proxy.runpod.net/send",
+    "https://ziik7963frhink-8001.proxy.runpod.net/send",
     headers={"X-API-Key": api_key},
     json={"event": "customer_feedback", "rating": 4}
 )
 print(resp.json())</code></pre></div>
 
-    <div class="tab-pane fade" id="send-js" role="tabpanel"><pre><code class="language-javascript">await fetch("https://jgypz1bf15gb8c-8000.proxy.runpod.net/send", {
+    <div class="tab-pane fade" id="send-js" role="tabpanel"><pre><code class="language-javascript">await fetch("https://ziik7963frhink-8001.proxy.runpod.net/send", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -384,6 +406,23 @@ print(resp.json())</code></pre></div>
   body: JSON.stringify({ event: "customer_feedback", rating: 4 })
 });</code></pre></div>
   </div>
+
+  <hr/>
+
+  <!-- ========================================================== -->
+  <h2 id="other">Additional Endpoints</h2>
+
+  <h3><code>GET /health</code></h3>
+  <p>Check the API health status and catalogue loading status.</p>
+  <pre><code class="language-bash">curl https://ziik7963frhink-8001.proxy.runpod.net/health</code></pre>
+
+  <h3><code>GET /catalogue</code></h3>
+  <p>Retrieve the full product catalogue (requires API key).</p>
+  <pre><code class="language-bash">curl -H "X-API-Key: $API_KEY" https://ziik7963frhink-8001.proxy.runpod.net/catalogue</code></pre>
+
+  <h3><code>GET /catalogue/{product_id}</code></h3>
+  <p>Get details for a specific product (requires API key).</p>
+  <pre><code class="language-bash">curl -H "X-API-Key: $API_KEY" https://ziik7963frhink-8001.proxy.runpod.net/catalogue/SP0001</code></pre>
 
   <hr/>
 
