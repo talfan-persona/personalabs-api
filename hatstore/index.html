@@ -239,19 +239,19 @@
   </ul>
 
   <div class="tab-content border-0">
-    <div class="tab-pane fade show active" id="auth-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://nltrzqhe35hmbd-8001.proxy.runpod.net/generate_api_key \
+    <div class="tab-pane fade show active" id="auth-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://w6fhcr9zdrtwls-8000.proxy.runpod.net/generate_api_key \
   -H "Content-Type: application/json" \
   -d '{"username": "test-user"}'</code></pre></div>
 
     <div class="tab-pane fade" id="auth-python" role="tabpanel"><pre><code class="language-python">import requests, json
 
 resp = requests.post(
-    "https://nltrzqhe35hmbd-8001.proxy.runpod.net/generate_api_key",
+    "https://w6fhcr9zdrtwls-8000.proxy.runpod.net/generate_api_key",
     json={"username": "test-user"},
 )
 print(resp.json())</code></pre></div>
 
-    <div class="tab-pane fade" id="auth-js" role="tabpanel"><pre><code class="language-javascript">const res = await fetch("https://nltrzqhe35hmbd-8001.proxy.runpod.net/generate_api_key", {
+    <div class="tab-pane fade" id="auth-js" role="tabpanel"><pre><code class="language-javascript">const res = await fetch("https://w6fhcr9zdrtwls-8000.proxy.runpod.net/generate_api_key", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ username: "test-user" })
@@ -298,7 +298,7 @@ console.log(await res.json());</code></pre></div>
   </ul>
 
   <div class="tab-content border-0">
-    <div class="tab-pane fade show active" id="query-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://nltrzqhe35hmbd-8001.proxy.runpod.net/query \
+    <div class="tab-pane fade show active" id="query-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://w6fhcr9zdrtwls-8000.proxy.runpod.net/query \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $API_KEY" \
   -d '{
@@ -311,7 +311,7 @@ console.log(await res.json());</code></pre></div>
     "n_results": 5
 }
 resp = requests.post(
-    "https://nltrzqhe35hmbd-8001.proxy.runpod.net/query",
+    "https://w6fhcr9zdrtwls-8000.proxy.runpod.net/query",
     headers={"X-API-Key": api_key},
     json=payload
 )
@@ -323,7 +323,7 @@ print(f"GPU used: {result['gpu_used']}")</code></pre></div>
   basket_ids: ["SP0001", "LP0201", "HP0401"],
   n_results: 5
 };
-const res = await fetch("https://nltrzqhe35hmbd-8001.proxy.runpod.net/query", {
+const res = await fetch("https://w6fhcr9zdrtwls-8000.proxy.runpod.net/query", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -384,19 +384,19 @@ console.log(`GPU used: ${data.gpu_used}`);</code></pre></div>
   </ul>
 
   <div class="tab-content border-0">
-    <div class="tab-pane fade show active" id="send-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://nltrzqhe35hmbd-8001.proxy.runpod.net/send \
+    <div class="tab-pane fade show active" id="send-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://w6fhcr9zdrtwls-8000.proxy.runpod.net/send \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $API_KEY" \
   -d @feedback.json</code></pre></div>
 
     <div class="tab-pane fade" id="send-python" role="tabpanel"><pre><code class="language-python">resp = requests.post(
-    "https://nltrzqhe35hmbd-8001.proxy.runpod.net/send",
+    "https://w6fhcr9zdrtwls-8000.proxy.runpod.net/send",
     headers={"X-API-Key": api_key},
     json={"event": "customer_feedback", "rating": 4}
 )
 print(resp.json())</code></pre></div>
 
-    <div class="tab-pane fade" id="send-js" role="tabpanel"><pre><code class="language-javascript">await fetch("https://nltrzqhe35hmbd-8001.proxy.runpod.net/send", {
+    <div class="tab-pane fade" id="send-js" role="tabpanel"><pre><code class="language-javascript">await fetch("https://w6fhcr9zdrtwls-8000.proxy.runpod.net/send", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -413,15 +413,15 @@ print(resp.json())</code></pre></div>
 
   <h3><code>GET /health</code></h3>
   <p>Check the API health status and catalogue loading status.</p>
-  <pre><code class="language-bash">curl https://nltrzqhe35hmbd-8001.proxy.runpod.net/health</code></pre>
+  <pre><code class="language-bash">curl https://w6fhcr9zdrtwls-8000.proxy.runpod.net/health</code></pre>
 
   <h3><code>GET /catalogue</code></h3>
   <p>Retrieve the full product catalogue (requires API key).</p>
-  <pre><code class="language-bash">curl -H "X-API-Key: $API_KEY" https://nltrzqhe35hmbd-8001.proxy.runpod.net/catalogue</code></pre>
+  <pre><code class="language-bash">curl -H "X-API-Key: $API_KEY" https://w6fhcr9zdrtwls-8000.proxy.runpod.net/catalogue</code></pre>
 
   <h3><code>GET /catalogue/{product_id}</code></h3>
   <p>Get details for a specific product (requires API key).</p>
-  <pre><code class="language-bash">curl -H "X-API-Key: $API_KEY" https://nltrzqhe35hmbd-8001.proxy.runpod.net/catalogue/SP0001</code></pre>
+  <pre><code class="language-bash">curl -H "X-API-Key: $API_KEY" https://w6fhcr9zdrtwls-8000.proxy.runpod.net/catalogue/SP0001</code></pre>
 
   <hr/>
 
