@@ -272,7 +272,7 @@ console.log(await res.json());</code></pre></div>
 
   <p><strong>Request body</strong></p>
   <pre><code class="language-json">{
-  "basket_ids": ["hs2425863", "hs2324477-5", "hs2216146"],
+  "basket_ids": ["hs2425863-1", "hs2324477-5", "hs2216146"],
   "n_results": 5,
   "request_type": "basket-search",
   "generative_captions": false,
@@ -302,12 +302,12 @@ console.log(await res.json());</code></pre></div>
   -H "Content-Type: application/json" \
   -H "X-API-Key: $API_KEY" \
   -d '{
-    "basket_ids": ["hs2425863", "hs2324477-5", "hs2216146"],
+    "basket_ids": ["hs2425863-1", "hs2324477-5", "hs2216146"],
     "n_results": 5
   }'</code></pre></div>
 
     <div class="tab-pane fade" id="query-python" role="tabpanel"><pre><code class="language-python">payload = {
-    "basket_ids": ["hs2425863", "hs2324477-5", "hs2216146"],
+    "basket_ids": ["hs2425863-1", "hs2324477-5", "hs2216146"],
     "n_results": 5
 }
 resp = requests.post(
@@ -320,7 +320,7 @@ print(result["ids"])
 print(f"GPU used: {result['gpu_used']}")</code></pre></div>
 
     <div class="tab-pane fade" id="query-js" role="tabpanel"><pre><code class="language-javascript">const payload = {
-  basket_ids: ["hs2425863", "hs2324477-5", "hs2216146"],
+  basket_ids: ["hs2425863-1", "hs2324477-5", "hs2216146"],
   n_results: 5
 };
 const res = await fetch("https://w6fhcr9zdrtwls-8000.proxy.runpod.net/query", {
