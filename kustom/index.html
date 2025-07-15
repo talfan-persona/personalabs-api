@@ -204,6 +204,7 @@
     <ol>
       <li>Generate an API key</li>
       <li>Make queries (<code>POST /query</code>)</li>
+      <li>Retrieve items (<code>POST /retrieve</code>)</li>
       <li>Send arbitrary payloads (<code>POST /send</code>)</li>
     </ol>
     Requests must be authenticated with <code>X-API-Key</code>—so step&nbsp;1 first.
@@ -239,19 +240,19 @@
   </ul>
 
   <div class="tab-content border-0">
-    <div class="tab-pane fade show active" id="auth-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://tzi5s94h21yvrd-8000.proxy.runpod.net/generate_api_key \
+    <div class="tab-pane fade show active" id="auth-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://ftdvxsjl5hljip-8000.proxy.runpod.net/generate_api_key \
   -H "Content-Type: application/json" \
   -d '{"username": "acme-inc"}'</code></pre></div>
 
     <div class="tab-pane fade" id="auth-python" role="tabpanel"><pre><code class="language-python">import requests, json
 
 resp = requests.post(
-    "https://tzi5s94h21yvrd-8000.proxy.runpod.net/generate_api_key",
+    "https://ftdvxsjl5hljip-8000.proxy.runpod.net/generate_api_key",
     json={"username": "acme-inc"},
 )
 print(resp.json())</code></pre></div>
 
-    <div class="tab-pane fade" id="auth-js" role="tabpanel"><pre><code class="language-javascript">const res = await fetch("https://tzi5s94h21yvrd-8000.proxy.runpod.net/generate_api_key", {
+    <div class="tab-pane fade" id="auth-js" role="tabpanel"><pre><code class="language-javascript">const res = await fetch("https://ftdvxsjl5hljip-8000.proxy.runpod.net/generate_api_key", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ username: "acme-inc" })
@@ -296,21 +297,21 @@ console.log(await res.json());</code></pre></div>
   </ul>
 
   <div class="tab-content border-0">
-    <div class="tab-pane fade show active" id="query-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://tzi5s94h21yvrd-8000.proxy.runpod.net/query \
+    <div class="tab-pane fade show active" id="query-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://ftdvxsjl5hljip-8000.proxy.runpod.net/query \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $API_KEY" \
   -d '{"basket_ids":["B097DQPCP2","B092J4ZT1V","B08QSLJGDL"]}'</code></pre></div>
 
     <div class="tab-pane fade" id="query-python" role="tabpanel"><pre><code class="language-python">payload = { "basket_ids": ["B097DQPCP2", "B092J4ZT1V", "B08QSLJGDL"] }
 resp = requests.post(
-    "https://tzi5s94h21yvrd-8000.proxy.runpod.net/query",
+    "https://ftdvxsjl5hljip-8000.proxy.runpod.net/query",
     headers={"X-API-Key": api_key},
     json=payload
 )
 print(resp.json()["ids"])</code></pre></div>
 
     <div class="tab-pane fade" id="query-js" role="tabpanel"><pre><code class="language-javascript">const payload = { basket_ids: ["B097DQPCP2", "B092J4ZT1V", "B08QSLJGDL"] };
-const res = await fetch("https://tzi5s94h21yvrd-8000.proxy.runpod.net/query", {
+const res = await fetch("https://ftdvxsjl5hljip-8000.proxy.runpod.net/query", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -325,7 +326,102 @@ console.log(data.ids);</code></pre></div>
   <hr/>
 
   <!-- ========================================================== -->
-  <h2 id="send">3 · Send arbitrary JSON (<code>POST /send</code>)</h2>
+  <h2 id="retrieve">3 · Retrieve corpus items (<code>POST /retrieve</code>)</h2>
+
+  <p>
+    Retrieve items from the corpus by specifying a list of indices or a range. The maximum number of items per request is 250.
+  </p>
+
+  <p><strong>Headers</strong></p>
+  <ul>
+    <li><code>Content-Type: application/json</code></li>
+    <li><code>X-API-Key: &lt;your-key&gt;</code></li>
+  </ul>
+
+  <p><strong>Request body (option 1: by indices)</strong></p>
+  <pre><code class="language-json">{
+  "indices": [0, 100, 200]
+}</code></pre>
+
+  <p><strong>Request body (option 2: by range)</strong></p>
+  <pre><code class="language-json">{
+  "ind_min": 0,
+  "ind_max": 10
+}</code></pre>
+
+  <p><strong>Response</strong></p>
+  <pre><code class="language-json">{
+  "items": ["hat", "shirt", "..."],
+  "ids": ["P-0001", "P-0002", "..."]
+}</code></pre>
+
+  <!-- --------- TAB NAV ---------- -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#retrieve-curl" role="tab">cURL</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#retrieve-python" role="tab">Python</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#retrieve-js" role="tab">JavaScript</button>
+    </li>
+  </ul>
+
+  <div class="tab-content border-0">
+    <div class="tab-pane fade show active" id="retrieve-curl" role="tabpanel"><pre><code class="language-bash"># By indices
+curl -X POST https://ftdvxsjl5hljip-8000.proxy.runpod.net/retrieve \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $API_KEY" \
+  -d '{"indices": [0, 100, 200]}'
+
+# By range
+curl -X POST https://ftdvxsjl5hljip-8000.proxy.runpod.net/retrieve \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $API_KEY" \
+  -d '{"ind_min": 0, "ind_max": 10}'</code></pre></div>
+
+    <div class="tab-pane fade" id="retrieve-python" role="tabpanel"><pre><code class="language-python"># By indices
+payload1 = { "indices": [0, 100, 200] }
+resp1 = requests.post(
+    "https://ftdvxsjl5hljip-8000.proxy.runpod.net/retrieve",
+    headers={"X-API-Key": api_key},
+    json=payload1
+)
+print(resp1.json())
+
+# By range
+payload2 = { "ind_min": 0, "ind_max": 10 }
+resp2 = requests.post(
+    "https://ftdvxsjl5hljip-8000.proxy.runpod.net/retrieve",
+    headers={"X-API-Key": api_key},
+    json=payload2
+)
+print(resp2.json())</code></pre></div>
+
+    <div class="tab-pane fade" id="retrieve-js" role="tabpanel"><pre><code class="language-javascript">// By indices
+const payload1 = { indices: [0, 100, 200] };
+const res1 = await fetch("https://ftdvxsjl5hljip-8000.proxy.runpod.net/retrieve", {
+  method: "POST",
+  headers: { "Content-Type": "application/json", "X-API-Key": apiKey },
+  body: JSON.stringify(payload1)
+});
+console.log(await res1.json());
+
+// By range
+const payload2 = { ind_min: 0, ind_max: 10 };
+const res2 = await fetch("https://ftdvxsjl5hljip-8000.proxy.runpod.net/retrieve", {
+  method: "POST",
+  headers: { "Content-Type": "application/json", "X-API-Key": apiKey },
+  body: JSON.stringify(payload2)
+});
+console.log(await res2.json());</code></pre></div>
+  </div>
+
+  <hr/>
+
+  <!-- ========================================================== -->
+  <h2 id="send">4 · Send arbitrary JSON (<code>POST /send</code>)</h2>
 
   <p>
     Use <code>/send</code> to store any debugging or feedback payload you like; the
@@ -363,19 +459,19 @@ console.log(data.ids);</code></pre></div>
   </ul>
 
   <div class="tab-content border-0">
-    <div class="tab-pane fade show active" id="send-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://tzi5s94h21yvrd-8000.proxy.runpod.net/send \
+    <div class="tab-pane fade show active" id="send-curl" role="tabpanel"><pre><code class="language-bash">curl -X POST https://ftdvxsjl5hljip-8000.proxy.runpod.net/send \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $API_KEY" \
   -d @feedback.json</code></pre></div>
 
     <div class="tab-pane fade" id="send-python" role="tabpanel"><pre><code class="language-python">resp = requests.post(
-    "https://tzi5s94h21yvrd-8000.proxy.runpod.net/send",
+    "https://ftdvxsjl5hljip-8000.proxy.runpod.net/send",
     headers={"X-API-Key": api_key},
     json={"event": "customer_feedback", "rating": 4}
 )
 print(resp.json())</code></pre></div>
 
-    <div class="tab-pane fade" id="send-js" role="tabpanel"><pre><code class="language-javascript">await fetch("https://tzi5s94h21yvrd-8000.proxy.runpod.net/send", {
+    <div class="tab-pane fade" id="send-js" role="tabpanel"><pre><code class="language-javascript">await fetch("https://ftdvxsjl5hljip-8000.proxy.runpod.net/send", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
